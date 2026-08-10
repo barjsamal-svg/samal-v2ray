@@ -16,7 +16,7 @@ jobs:
       - name: Build with Gradle
         run: cd V2rayNG && ./gradlew assembleFdroidDebug --no-daemon -x test
       - name: Upload APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: samal-v2ray-apk
           path: V2rayNG/app/build/outputs/apk/fdroid/debug/*.apk
