@@ -1,6 +1,10 @@
 package com.samal.v2ray.handler
 
+import android.content.Context
+import android.net.Uri
 import android.util.Base64
+import java.io.File
+import java.io.FileOutputStream
 import java.nio.charset.StandardCharsets
 import javax.crypto.Cipher
 import javax.crypto.SecretKeyFactory
@@ -53,6 +57,25 @@ object SamalCrypto {
             return "SAMALv1:" + Base64.encodeToString(combined, Base64.NO_WRAP)
         } catch (e: Exception) {
             return ""
+        }
+    }
+
+    fun exportSamalFile(context: Context, jsonConfig: String, message: String, expiry: String, profileName: String): File? {
+        try {
+            val encryptedContent = encryptConfig(jsonConfig, message, expiry)
+            if (encryptedContent.isEmpty()) return null
+
+            val fileName = "${profileName.replace(Regex("[^a-zA-Z0-9_-]"), "_")}.samal"
+            val dir = File(context.getExternalFilesDir(null), "samal_exports")
+            if (!dir.exists()) dir.mkdirs()
+
+            val file = File(dir, fileName)
+            FileOutputStream(file).use {
+                it.write(encryptedContent.toByteArray(StandardCharsets.UTF_8))
+            }
+            return file
+        } catch (e: Exception) {
+            return null
         }
     }
 
