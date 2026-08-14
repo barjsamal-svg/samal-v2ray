@@ -1,0 +1,105 @@
+package com.samal.v2ray.handler
+
+import android.util.Base64
+import java.nio.charset.StandardCharsets
+import javax.crypto.Cipher
+import javax.crypto.SecretKeyFactory
+import javax.crypto.spec.GCMParameterSpec
+import javax.crypto.spec.PBEKeySpec
+import javax.crypto.spec.SecretKeySpec
+
+object SamalCrypto {
+    private const val ALGORITHM = "AES/GCM/NoPadding"
+    private const val TAG_LENGTH_BIT = 128
+    private const val IV_LENGTH_BYTE = 12
+    private const val SALT_LENGTH_BYTE = 16
+    private const val ITERATIONS = 100000
+    private const val KEY_LENGTH = 256
+    private const val MASTER_SECRET = "SAMAL_V2RAY_ULTRA_SECRET_KEY_2026_@libsammal"
+
+    data class SamalResult(
+        val success: Boolean,
+        val decryptedJson: String = "",
+        val message: String = "",
+        val expiry: String = ""
+    )
+
+    fun encryptConfig(jsonConfig: String, message: String, expiry: String): String {
+        try {
+            val salt = ByteArray(SALT_LENGTH_BYTE).apply {
+                java.security.SecureRandom().nextBytes(this)
+            }
+            val iv = ByteArray(IV_LENGTH_BYTE).apply {
+                java.security.SecureRandom().nextBytes(this)
+            }
+
+            val factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256")
+            val spec = PBEKeySpec(MASTER_SECRET.toCharArray(), salt, ITERATIONS, KEY_LENGTH)
+            val tmp = factory.generateSecret(spec)
+            val secretKey = SecretKeySpec(tmp.encoded, "AES")
+
+            val cipher = Cipher.getInstance(ALGORITHM)
+            val gcmSpec = GCMParameterSpec(TAG_LENGTH_BIT, iv)
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey, gcmSpec)
+
+            val payload = "MSG:$message|EXP:$expiry|DATA:$jsonConfig"
+            val encrypted = cipher.doFinal(payload.toByteArray(StandardCharsets.UTF_8))
+
+            val combined = ByteArray(salt.size + iv.size + encrypted.size)
+            System.arraycopy(salt, 0, combined, 0, salt.size)
+            System.arraycopy(iv, 0, combined, salt.size, iv.size)
+            System.arraycopy(encrypted, 0, combined, salt.size + iv.size, encrypted.size)
+
+            return "SAMALv1:" + Base64.encodeToString(combined, Base64.NO_WRAP)
+        } catch (e: Exception) {
+            return ""
+        }
+    }
+
+    fun decryptConfig(token: String): SamalResult {
+        try {
+            if (!token.startsWith("SAMALv1:")) {
+                return SamalResult(true, decryptedJson = token)
+            }
+            val raw = token.substring(8)
+            val decoded = Base64.decode(raw, Base64.NO_WRAP)
+
+            val salt = ByteArray(SALT_LENGTH_BYTE)
+            val iv = ByteArray(IV_LENGTH_BYTE)
+            val encrypted = ByteArray(decoded.size - SALT_LENGTH_BYTE - IV_LENGTH_BYTE)
+
+            System.arraycopy(decoded, 0, salt, 0, SALT_LENGTH_BYTE)
+            System.arraycopy(decoded, SALT_LENGTH_BYTE, iv, 0, IV_LENGTH_BYTE)
+            System.arraycopy(decoded, SALT_LENGTH_BYTE + IV_LENGTH_BYTE, encrypted, 0, encrypted.size)
+
+            val factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256")
+            val spec = PBEKeySpec(MASTER_SECRET.toCharArray(), salt, ITERATIONS, KEY_LENGTH)
+            val tmp = factory.generateSecret(spec)
+            val secretKey = SecretKeySpec(tmp.encoded, "AES")
+
+            val cipher = Cipher.getInstance(ALGORITHM)
+            val gcmSpec = GCMParameterSpec(TAG_LENGTH_BIT, iv)
+            cipher.init(Cipher.DECRYPT_MODE, secretKey, gcmSpec)
+
+            val decryptedBytes = cipher.doFinal(encrypted)
+            val fullPayload = String(decryptedBytes, StandardCharsets.UTF_8)
+
+            var message = ""
+            var expiry = ""
+            var data = fullPayload
+
+            if (fullPayload.contains("MSG:") && fullPayload.contains("|EXP:") && fullPayload.contains("|DATA:")) {
+                val msgPart = fullPayload.substringAfter("MSG:").substringBefore("|EXP:")
+                val expPart = fullPayload.substringAfter("|EXP:").substringBefore("|DATA:")
+                val dataPart = fullPayload.substringAfter("|DATA:")
+                message = msgPart
+                expiry = expPart
+                data = dataPart
+            }
+
+            return SamalResult(true, decryptedJson = data, message = message, expiry = expiry)
+        } catch (e: Exception) {
+            return SamalResult(false, message = "Decryption Failed: Invalid or Corrupted SAMAL File!")
+        }
+    }
+}
