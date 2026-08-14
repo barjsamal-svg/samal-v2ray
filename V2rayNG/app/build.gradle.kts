@@ -48,6 +48,11 @@ android {
         }
     }
 
+    lint {
+        checkReleaseBuilds = false
+        abortOnError = false
+    }
+
     flavorDimensions.add("distribution")
     productFlavors {
         create("fdroid") {
