@@ -160,12 +160,18 @@ object AngConfigManager {
                 EConfigType.TROJAN -> TrojanFmt.toUri(config)
                 EConfigType.WIREGUARD -> WireguardFmt.toUri(config)
                 EConfigType.HYSTERIA2 -> Hysteria2Fmt.toUri(config)
-                else -> {}
+                else -> ""
             }
         } catch (e: Exception) {
             LogUtil.e(AppConfig.TAG, "Failed to share config for GUID: $guid", e)
             return ""
         }
+    }
+
+    fun share2Samal(guid: String, message: String, expiry: String): String {
+        val configUri = shareConfig(guid)
+        if (configUri.isEmpty()) return ""
+        return com.samal.v2ray.handler.SamalCrypto.encryptConfig(configUri, message, expiry)
     }
 
     /**
@@ -177,12 +183,18 @@ object AngConfigManager {
      * @return A pair containing the number of configurations and subscriptions imported.
      */
     fun importBatchConfig(server: String?, subid: String, append: Boolean): Pair<Int, Int> {
-        var count = parseBatchConfig(Utils.decode(server), subid, append)
+        var finalServer = server
+        val samalResult = if (server != null) com.samal.v2ray.handler.SamalCrypto.decryptConfig(server) else null
+        if (samalResult != null && samalResult.success) {
+            finalServer = samalResult.decryptedJson
+        }
+
+        var count = parseBatchConfig(Utils.decode(finalServer), subid, append)
         if (count <= 0) {
-            count = parseBatchConfig(server, subid, append)
+            count = parseBatchConfig(finalServer, subid, append)
         }
         if (count <= 0) {
-            count = parseCustomConfigServer(server, subid, append)
+            count = parseCustomConfigServer(finalServer, subid, append)
         }
 
         var countSub = parseBatchSubscription(server)

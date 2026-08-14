@@ -543,3 +543,11 @@
     <string name="value_unknown">غير معروف</string>
 
 </resources>
+
+    <string name="share_method_samal">تصدير SAMAL مشفر (.samal)</string>
+    <string name="samal_export_dialog_title">تصدير SAMAL الآمن</string>
+    <string name="samal_export_expiry_label">تاريخ الانتهاء (YYYY-MM-DD)</string>
+    <string name="samal_export_message_label">رسالة مخصصة</string>
+    <string name="samal_export_button">تصدير مشفر الآن</string>
+    <string name="samal_import_success">تم استيراد تكوين SAMAL بنجاح!</string>
+    <string name="samal_import_expired">عذراً، هذا التكوين منتهي الصلاحية!</string>

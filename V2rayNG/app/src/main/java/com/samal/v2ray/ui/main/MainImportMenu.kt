@@ -46,6 +46,7 @@ internal enum class ServerMenuAction(
 ) {
     ShareQRCode(R.string.share_method_qrcode, isShareAction = true, supportsComplexProfiles = false),
     ShareClipboard(R.string.share_method_clipboard, isShareAction = true, supportsComplexProfiles = false),
+    ShareSamal(R.string.share_method_samal, isShareAction = true, supportsComplexProfiles = false),
     ShareFullContent(R.string.share_method_full_content, isShareAction = true, supportsComplexProfiles = true),
     Edit(R.string.action_edit, isShareAction = false, supportsComplexProfiles = true),
     Delete(R.string.action_delete, isShareAction = false, supportsComplexProfiles = true),
@@ -93,6 +94,7 @@ fun ShareMethodDialog(
             when (action) {
                 ServerMenuAction.ShareQRCode -> onAction(MainAction.ShareQRCode(guid))
                 ServerMenuAction.ShareClipboard -> onAction(MainAction.ShareClipboard(guid))
+                ServerMenuAction.ShareSamal -> onAction(MainAction.ShareSamal(guid))
                 ServerMenuAction.ShareFullContent -> onAction(MainAction.ShareFullContent(guid))
                 ServerMenuAction.Edit -> onAction(MainAction.EditServer(guid, profile))
                 ServerMenuAction.Delete -> onRemove(guid)

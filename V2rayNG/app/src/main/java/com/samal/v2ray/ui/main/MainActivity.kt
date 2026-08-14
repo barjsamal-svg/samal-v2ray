@@ -115,6 +115,7 @@ class MainActivity : HelperBaseComponentActivity() {
                     is MainAction.SelectServer -> setSelectServer(action.guid)
                     is MainAction.EditServer -> editServer(action.guid, action.profile)
                     is MainAction.ShareClipboard -> shareToClipboard(action.guid)
+                    is MainAction.ShareSamal -> shareSamalToClipboard(action.guid)
                     is MainAction.ShareFullContent -> shareFullContentAsync(action.guid)
                     else -> mainViewModel.onAction(action)
                 }
@@ -125,6 +126,16 @@ class MainActivity : HelperBaseComponentActivity() {
 
     private fun shareToClipboard(guid: String): Boolean =
         AngConfigManager.share2Clipboard(this, guid) == 0
+
+    private fun shareSamalToClipboard(guid: String) {
+        val encrypted = AngConfigManager.share2Samal(guid, "Protected by SAMAL @libsammal", "2029-12-31")
+        if (encrypted.isNotEmpty()) {
+            Utils.setClipboard(this, encrypted)
+            toastSuccess(R.string.toast_success)
+        } else {
+            toastError(R.string.toast_failure)
+        }
+    }
 
     private fun shareFullContentAsync(guid: String) {
         lifecycleScope.launch(Dispatchers.IO) {
