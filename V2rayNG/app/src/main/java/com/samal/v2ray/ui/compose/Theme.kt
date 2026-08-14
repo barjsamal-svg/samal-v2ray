@@ -94,7 +94,6 @@ private val DarkColor = darkColorScheme(
     surfaceContainerLow = Color(0xFF12080D),
     surfaceContainer = Color(0xFF1C0D15),
     surfaceContainerHigh = Color(0xFF27131D),
-    surfaceContainerSecond = Color(0xFF331926),
     surfaceContainerHighest = Color(0xFF3F1F2F),
 )
 
