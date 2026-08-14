@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace = "com.samal.v2ray"
-    compileSdk = 35
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.samal.v2ray"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 37
         versionCode = 743
         versionName = "2.3.3"
 
