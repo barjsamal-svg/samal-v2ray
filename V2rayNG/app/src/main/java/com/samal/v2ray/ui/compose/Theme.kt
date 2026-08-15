@@ -30,6 +30,10 @@ private val TextDark = Color(0xFF1E2229)          // Soft rich dark for excellen
 private val TextGray = Color(0xFF7A828E)
 private val BorderColor = Color(0xFFE2E8F0)
 
+val colorFabActive = Color(0xFFFF1493)
+val colorFabInactiveDark = Color(0xFF2A2E3D)
+val colorFabInactiveLight = Color(0xFFE2E8F0)
+
 private val LuxuriousLightColor = lightColorScheme(
     primary = LuxuriousPink,
     onPrimary = PureWhite,
