@@ -100,8 +100,8 @@ class UrlSchemeActivity : BaseComponentActivity() {
 }
     private fun readUriContent(uri: Uri): String? {
         return try {
-            applicationContext.contentResolver.openInputStream(uri)?.use<java.io.InputStream, String?> { inputStream ->
-                inputStream.bufferedReader().use<java.io.BufferedReader, String> { it.readText() }
+            contentResolver.openInputStream(uri)?.use { inputStream ->
+                inputStream.bufferedReader().use { it.readText() }
             }
         } catch (e: Exception) {
             LogUtil.e(AppConfig.TAG, "Failed to read URI content", e)
