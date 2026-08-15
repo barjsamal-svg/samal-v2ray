@@ -34,6 +34,11 @@ val colorFabActive = Color(0xFFFF1493)
 val colorFabInactiveDark = Color(0xFF2A2E3D)
 val colorFabInactiveLight = Color(0xFFE2E8F0)
 
+object ThemeManager {
+    fun getTheme(): Int = 0
+    fun setTheme(theme: Int) {}
+}
+
 private val LuxuriousLightColor = lightColorScheme(
     primary = LuxuriousPink,
     onPrimary = PureWhite,
