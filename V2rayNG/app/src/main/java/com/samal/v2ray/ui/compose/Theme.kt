@@ -1,3 +1,4 @@
+
 package com.samal.v2ray.ui.compose
 
 import android.app.Activity
@@ -19,111 +20,51 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-// Pure White & Neon Pink Theme (White Edition)
+// Luxurious Off-White & Deep Neon Pink Theme (Luxurious White Edition)
+private val LuxuriousBg = Color(0xFFF4F6F9)       // Warm Off-White luxurious background
 private val PureWhite = Color(0xFFFFFFFF)
-private val LightSurface = Color(0xFFF8F9FA)
 private val CardSurface = Color(0xFFFFFFFF)
-private val NeonPink = Color(0xFFFF007F)
-private val DeepPink = Color(0xFFFF1493)
-private val SoftPinkBg = Color(0xFFFFEFF5)
-private val TextDark = Color(0xFF1A1A1A)
-private val TextGray = Color(0xFF666666)
+private val LuxuriousPink = Color(0xFFFF1493)     // Deep Neon Pink
+private val SoftPinkTint = Color(0xFFFFE4EE)
+private val TextDark = Color(0xFF1E2229)          // Soft rich dark for excellent readability
+private val TextGray = Color(0xFF7A828E)
+private val BorderColor = Color(0xFFE2E8F0)
 
-private val LightColor = lightColorScheme(
-    primary = NeonPink,
+private val LuxuriousLightColor = lightColorScheme(
+    primary = LuxuriousPink,
     onPrimary = PureWhite,
-    primaryContainer = Color(0xFFFFD6E8),
+    primaryContainer = SoftPinkTint,
     onPrimaryContainer = Color(0xFF3B0018),
-    secondary = DeepPink,
+    secondary = Color(0xFF6366F1),
     onSecondary = PureWhite,
-    secondaryContainer = Color(0xFFFFD1DC),
-    onSecondaryContainer = Color(0xFF3D0017),
-    background = PureWhite,
+    secondaryContainer = Color(0xFFE0E7FF),
+    onSecondaryContainer = Color(0xFF1E1B4B),
+    background = LuxuriousBg,
     onBackground = TextDark,
     surface = CardSurface,
     onSurface = TextDark,
-    surfaceVariant = SoftPinkBg,
+    surfaceVariant = Color(0xFFFAF2F6),
     onSurfaceVariant = TextGray,
-    outline = Color(0xFFE0E0E0),
-    surfaceTint = NeonPink
+    outline = BorderColor,
+    surfaceTint = LuxuriousPink
 )
-
-// Also keep light theme as default for dark setting if forced white
-private val DarkColor = lightColorScheme(
-    primary = NeonPink,
-    onPrimary = PureWhite,
-    primaryContainer = Color(0xFFFFD6E8),
-    onPrimaryContainer = Color(0xFF3B0018),
-    secondary = DeepPink,
-    onSecondary = PureWhite,
-    secondaryContainer = Color(0xFFFFD1DC),
-    onSecondaryContainer = Color(0xFF3D0017),
-    background = PureWhite,
-    onBackground = TextDark,
-    surface = CardSurface,
-    onSurface = TextDark,
-    surfaceVariant = SoftPinkBg,
-    onSurfaceVariant = TextGray,
-    outline = Color(0xFFE0E0E0),
-    surfaceTint = NeonPink
-)
-
-// Exported Semantic Colors for other components
-val colorPing = Color(0xFF00C853)
-val colorPingRed = Color(0xFFFF3D00)
-val colorConfigType = Color(0xFFFF007F)
-val colorFabActive = Color(0xFFFF007F)
-val colorFabInactiveLight = Color(0xFFE0E0E0)
-val colorFabInactiveDark = Color(0xFFBDBDBD)
-val dividerColorLight = Color(0xFFFFD1DC)
-val dividerColorDark = Color(0xFFFFD1DC)
-
-// Toast/SnackBar Colors
-val toastNormalBgLight = Color(0xCC1A1A1A)
-val toastNormalBgDark = Color(0xCC1A1A1A)
-val toastSuccessBg = Color(0xCCFF007F)
-val toastErrorBg = Color(0xCCD32F2F)
-val toastInfoBg = Color(0xCCFF1493)
-val toastIconCircleBg = Color(0x20FFFFFF)
-val toastTextColor = Color.White
-
-val LocalDarkTheme = compositionLocalOf { false }
-
-object ThemeManager {
-    private val _themeMode = MutableStateFlow(0) // Force Light/White mode by default
-    val themeMode: StateFlow<Int> = _themeMode.asStateFlow()
-
-    fun setThemeMode(mode: Int) {
-        _themeMode.value = 0 // Always white
-    }
-
-    fun refresh() {}
-
-    init {
-        _themeMode.value = 0
-    }
-}
 
 @Composable
-fun SamalTheme(content: @Composable () -> Unit) {
-    val colorScheme = LightColor
+fun AppTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
+    val colorScheme = LuxuriousLightColor
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            WindowCompat.getInsetsController(window, view).apply {
-                isAppearanceLightStatusBars = true
-                isAppearanceLightNavigationBars = true
-            }
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = true
         }
     }
 
-    CompositionLocalProvider(LocalDarkTheme provides false) {
-        MaterialTheme(colorScheme = colorScheme, content = content)
-    }
-}
-
-@Composable
-fun AppTheme(content: @Composable () -> Unit) {
-    SamalTheme(content)
+    MaterialTheme(
+        colorScheme = colorScheme,
+        content = content
+    )
 }

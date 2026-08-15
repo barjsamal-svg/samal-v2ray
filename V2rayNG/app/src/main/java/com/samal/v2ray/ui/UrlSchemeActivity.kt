@@ -36,12 +36,19 @@ class UrlSchemeActivity : BaseComponentActivity() {
                         val content = readUriContent(uri)
                         if (!content.isNullOrEmpty()) {
                             lifecycleScope.launch(Dispatchers.IO) {
-                                val (count, countSub) = AngConfigManager.importBatchConfig(content, "", false)
-                                withContext(Dispatchers.Main) {
-                                    if (count + countSub > 0) {
-                                        toast("SAMAL Config Imported Successfully!")
-                                    } else {
-                                        toast("Failed to import SAMAL Config")
+                                val samalRes = com.samal.v2ray.handler.SamalCrypto.decryptConfig(content.trim())
+                                if (samalRes.isLocked && !samalRes.success) {
+                                    withContext(Dispatchers.Main) {
+                                        toastError("❌ هذا الكونفج مقفل تشفيرياً ولا يمكن فكه أو استيراده!")
+                                    }
+                                } else {
+                                    val (count, countSub) = AngConfigManager.importBatchConfig(content.trim(), "", false)
+                                    withContext(Dispatchers.Main) {
+                                        if (count + countSub > 0) {
+                                            toastSuccess("✅ تم استيراد كونفج SAMAL بنجاح!")
+                                        } else {
+                                            toastError("❌ فشل استيراد الكونفج!")
+                                        }
                                     }
                                 }
                             }

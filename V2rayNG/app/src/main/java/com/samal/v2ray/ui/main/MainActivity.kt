@@ -148,24 +148,33 @@ class MainActivity : HelperBaseComponentActivity() {
             setText("2030-12-31")
         }
 
+        val lockSwitch = android.widget.CheckBox(this).apply {
+            text = "قفل الكونفج بالكامل وحمايته من التلاعب (Fortress Lock) 🔒"
+            isChecked = true
+            textSize = 14f
+            setPadding(0, 20, 0, 10)
+        }
+
         dialogView.addView(messageInput)
         dialogView.addView(expiryInput)
+        dialogView.addView(lockSwitch)
 
         androidx.appcompat.app.AlertDialog.Builder(this)
-            .setTitle("SAMAL Secure Export")
+            .setTitle("SAMAL Secure Export (.samal)")
             .setView(dialogView)
-            .setPositiveButton("Export & Share") { _, _ ->
+            .setPositiveButton("تصدير ومشاركة") { _, _ ->
                 val htmlMsg = messageInput.text.toString()
                 val expiry = expiryInput.text.toString()
-                performSamalExport(guid, htmlMsg, expiry)
+                val isLocked = lockSwitch.isChecked
+                performSamalExport(guid, htmlMsg, expiry, isLocked)
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton("إلغاء", null)
             .show()
     }
 
-    private fun performSamalExport(guid: String, htmlMsg: String, expiry: String) {
+    private fun performSamalExport(guid: String, htmlMsg: String, expiry: String, isLocked: Boolean) {
         try {
-            val samalFile = AngConfigManager.share2Samal(this, guid, htmlMsg, expiry)
+            val samalFile = AngConfigManager.share2Samal(this, guid, htmlMsg, expiry, isLocked)
             if (samalFile != null && samalFile.exists()) {
                 val authority = "${packageName}.cache"
                 val uri = androidx.core.content.FileProvider.getUriForFile(this, authority, samalFile)

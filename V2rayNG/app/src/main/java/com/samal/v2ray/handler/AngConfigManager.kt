@@ -168,12 +168,12 @@ object AngConfigManager {
         }
     }
 
-    fun share2Samal(context: Context, guid: String, message: String, expiry: String): java.io.File? {
+    fun share2Samal(context: Context, guid: String, message: String, expiry: String, isLocked: Boolean): java.io.File? {
         val configUri = shareConfig(guid)
         if (configUri.isEmpty()) return null
         val config = MmkvManager.decodeServerConfig(guid)
         val profileName = config?.remarks ?: "samal_config"
-        return com.samal.v2ray.handler.SamalCrypto.exportSamalFile(context, configUri, message, expiry, profileName)
+        return com.samal.v2ray.handler.SamalCrypto.exportSamalFile(context, configUri, message, expiry, profileName, isLocked)
     }
 
     /**
