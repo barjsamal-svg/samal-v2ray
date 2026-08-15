@@ -1,8 +1,8 @@
 package com.samal.v2ray.handler
 
 import android.content.Context
-import android.net.Uri
 import android.util.Base64
+import android.util.Log
 import java.io.File
 import java.io.FileOutputStream
 import java.nio.charset.StandardCharsets
@@ -56,6 +56,7 @@ object SamalCrypto {
 
             return "SAMALv1:" + Base64.encodeToString(combined, Base64.NO_WRAP)
         } catch (e: Exception) {
+            Log.e("SamalCrypto", "Encryption failed", e)
             return ""
         }
     }
@@ -65,9 +66,14 @@ object SamalCrypto {
             val encryptedContent = encryptConfig(jsonConfig, message, expiry)
             if (encryptedContent.isEmpty()) return null
 
-            val fileName = "${profileName.replace(Regex("[^a-zA-Z0-9_-]"), "_")}.samal"
-            val dir = File(context.getExternalFilesDir(null), "samal_exports")
-            if (!dir.exists()) dir.mkdirs()
+            val sanitizedName = profileName.replace(Regex("[^a-zA-Z0-9_-]"), "_")
+            val fileName = "SAMAL_${sanitizedName}_${System.currentTimeMillis()}.samal"
+            
+            // Use external files dir or cache dir safely
+            val dir = File(context.getExternalFilesDir(null) ?: context.filesDir, "samal_exports")
+            if (!dir.exists()) {
+                dir.mkdirs()
+            }
 
             val file = File(dir, fileName)
             FileOutputStream(file).use {
@@ -75,6 +81,7 @@ object SamalCrypto {
             }
             return file
         } catch (e: Exception) {
+            Log.e("SamalCrypto", "Export samal file failed", e)
             return null
         }
     }
@@ -86,6 +93,10 @@ object SamalCrypto {
             }
             val raw = token.substring(8)
             val decoded = Base64.decode(raw, Base64.NO_WRAP)
+
+            if (decoded.size < SALT_LENGTH_BYTE + IV_LENGTH_BYTE) {
+                return SamalResult(false, message = "Invalid token size")
+            }
 
             val salt = ByteArray(SALT_LENGTH_BYTE)
             val iv = ByteArray(IV_LENGTH_BYTE)
@@ -105,24 +116,32 @@ object SamalCrypto {
             cipher.init(Cipher.DECRYPT_MODE, secretKey, gcmSpec)
 
             val decryptedBytes = cipher.doFinal(encrypted)
-            val fullPayload = String(decryptedBytes, StandardCharsets.UTF_8)
+            val payload = String(decryptedBytes, StandardCharsets.UTF_8)
 
             var message = ""
             var expiry = ""
-            var data = fullPayload
+            var data = payload
 
-            if (fullPayload.contains("MSG:") && fullPayload.contains("|EXP:") && fullPayload.contains("|DATA:")) {
-                val msgPart = fullPayload.substringAfter("MSG:").substringBefore("|EXP:")
-                val expPart = fullPayload.substringAfter("|EXP:").substringBefore("|DATA:")
-                val dataPart = fullPayload.substringAfter("|DATA:")
-                message = msgPart
-                expiry = expPart
-                data = dataPart
+            if (payload.contains("MSG:") && payload.contains("|EXP:") && payload.contains("|DATA:")) {
+                val msgIndex = payload.indexOf("MSG:") + 4
+                val expIndex = payload.indexOf("|EXP:")
+                val dataIndex = payload.indexOf("|DATA:") + 6
+
+                if (msgIndex in 4..expIndex) {
+                    message = payload.substring(msgIndex, expIndex)
+                }
+                if (expIndex in 0..dataIndex) {
+                    expiry = payload.substring(expIndex + 5, dataIndex - 6)
+                }
+                if (dataIndex in 6..payload.length) {
+                    data = payload.substring(dataIndex)
+                }
             }
 
             return SamalResult(true, decryptedJson = data, message = message, expiry = expiry)
         } catch (e: Exception) {
-            return SamalResult(false, message = "Decryption Failed: Invalid or Corrupted SAMAL File!")
+            Log.e("SamalCrypto", "Tampering detected or decryption failed", e)
+            return SamalResult(false, message = "Tampered or invalid samal config")
         }
     }
 }
