@@ -549,11 +549,4 @@
     <string name="samal_import_expired">This SAMAL Config has expired!</string>
 
     <!-- SAMAL Custom Strings -->
-    <string name="share_method_samal">Export .SAMAL File (@libsammal)</string>
-    <string name="samal_export_dialog_title">SAMAL Secure Export</string>
-    <string name="samal_export_expiry_label">Expiry Date (YYYY-MM-DD)</string>
-    <string name="samal_export_message_label">Custom Message</string>
-    <string name="samal_export_button">Export Encrypted</string>
-    <string name="samal_import_success">SAMAL Config Imported Successfully!</string>
-    <string name="samal_import_expired">This SAMAL Config has expired!</string>
 </resources>
