@@ -241,6 +241,7 @@ fun MainScreen(
                 )
             },
             floatingActionButton = {},
+            containerColor = MaterialTheme.colorScheme.background,
         ) { innerPadding ->
             val layoutDirection = LocalLayoutDirection.current
 

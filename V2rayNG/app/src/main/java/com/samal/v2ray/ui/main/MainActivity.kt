@@ -128,19 +128,27 @@ class MainActivity : HelperBaseComponentActivity() {
         AngConfigManager.share2Clipboard(this, guid) == 0
 
     private fun shareSamalToClipboard(guid: String) {
-        val htmlMsg = "<h6 align=\\\"center\\\"><span style=\\\"text-align: center;\\\"><h4 style=\\\"text-align:center;\\\"> <b><span style=\\\"color:aqua;\\\">🇮🇶 𝑰𝑸 𝑵𝑬𝑻 🇮🇶\\n\\n🌟محترفو الانترنت المجاني🌟"
-        val samalFile = AngConfigManager.share2Samal(this, guid, htmlMsg, "2029-12-31")
-        if (samalFile != null && samalFile.exists()) {
-            val uri = androidx.core.content.FileProvider.getUriForFile(this, "${packageName}.cache", samalFile)
-            val intent = Intent(Intent.ACTION_SEND).apply {
-                type = "*/*"
-                putExtra(Intent.EXTRA_STREAM, uri)
-                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        try {
+            val htmlMsg = "<h6 align=\"center\"><span style=\"text-align: center;\"><h4 style=\"text-align:center;\"> <b><span style=\"color:aqua;\">🇮🇶 𝑰𝑸 𝑵𝑬𝑻 🇮🇶<br><br>🌟محترفو الانترنت المجاني🌟"
+            val samalFile = AngConfigManager.share2Samal(this, guid, htmlMsg, "2029-12-31")
+            if (samalFile != null && samalFile.exists()) {
+                val authority = "${packageName}.cache"
+                val uri = androidx.core.content.FileProvider.getUriForFile(this, authority, samalFile)
+                val intent = Intent(Intent.ACTION_SEND).apply {
+                    type = "application/octet-stream"
+                    putExtra(Intent.EXTRA_STREAM, uri)
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+                val chooser = Intent.createChooser(intent, "Share SAMAL Config")
+                chooser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(chooser)
+            } else {
+                toast("Failed to create .samal file")
             }
-            startActivity(Intent.createChooser(intent, "Share SAMAL Config"))
-            toastSuccess(R.string.toast_success)
-        } else {
-            toastError(R.string.toast_failure)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            toast("Export Error: ${e.message}")
         }
     }
 

@@ -86,12 +86,18 @@ fun MainDrawerContent(drawerState: DrawerState, onNavigate: (MainDestination) ->
                     verticalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = stringResource(R.string.app_name),
+                        text = "SAMAL V2RAY",
                         style = MaterialTheme.typography.headlineLarge.copy(
-                            fontFamily = FontFamily(Font(R.font.montserrat_thin)),
-                            fontWeight = FontWeight.Thin
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
                         ),
                         textAlign = TextAlign.Center
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    Text(
+                        text = "@libsammal / IQ NET",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.secondary
                     )
                 }
             }
