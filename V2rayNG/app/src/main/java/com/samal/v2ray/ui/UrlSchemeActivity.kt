@@ -116,3 +116,4 @@ class UrlSchemeActivity : BaseComponentActivity() {
             return null
         }
     }
+}
