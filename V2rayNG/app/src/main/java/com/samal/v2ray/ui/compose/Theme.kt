@@ -1,7 +1,7 @@
+package com.samal.v2ray.ui.compose
+
 import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
@@ -11,11 +11,9 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
-import com.samal.v2ray.AppConfig
 import com.samal.v2ray.handler.MmkvManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -39,9 +37,9 @@ private val LightColor = lightColorScheme(
     errorContainer = Color(0xFFFFCDD2),
     onError = Color(0xFFFFFFFF),
     onErrorContainer = Color(0xFFB71C1C),
-    background = Color(0xFFFFF0F5), // Lavender Blush (Soft Pinkish White)
+    background = Color(0xFFFFF0F5),
     onBackground = Color(0xFF1F1A1C),
-    surface = Color(0xFFFFFFFF), // Pure White Card Surface
+    surface = Color(0xFFFFFFFF),
     onSurface = Color(0xFF1F1A1C),
     surfaceVariant = Color(0xFFF9E4EC),
     onSurfaceVariant = Color(0xFF524348),
@@ -51,12 +49,7 @@ private val LightColor = lightColorScheme(
     inverseOnSurface = Color(0xFFFAEDF1),
     inversePrimary = Color(0xFFFF85C0),
     scrim = Color(0xFF000000),
-    surfaceTint = Color(0xFFFF007F),
-    surfaceContainerLowest = Color(0xFFFFFFFF),
-    surfaceContainerLow = Color(0xFFFFF8FA),
-    surfaceContainer = Color(0xFFFDE8EE),
-    surfaceContainerHigh = Color(0xFFF7D5E0),
-    surfaceContainerHighest = Color(0xFFF0B8CB),
+    surfaceTint = Color(0xFFFF007F)
 )
 
 private val DarkColor = darkColorScheme(
@@ -80,7 +73,7 @@ private val DarkColor = darkColorScheme(
     onBackground = Color(0xFFFFF0F5),
     surface = Color(0xFF000000), // Pure OLED Black Surface
     onSurface = Color(0xFFFFF0F5),
-    surfaceVariant = Color(0xFF2E1A23), // Deep Glass Dark Pink Tint
+    surfaceVariant = Color(0xFF2E1A23),
     onSurfaceVariant = Color(0xFFD9C1CA),
     outline = Color(0xFFA18C94),
     outlineVariant = Color(0xFF3D2631),
@@ -88,15 +81,10 @@ private val DarkColor = darkColorScheme(
     inverseOnSurface = Color(0xFF1A1115),
     inversePrimary = Color(0xFFFF007F),
     scrim = Color(0xFF000000),
-    surfaceTint = Color(0xFFFF2A9D),
-    surfaceContainerLowest = Color(0xFF000000), // Absolute OLED Black
-    surfaceContainerLow = Color(0xFF0D0307),
-    surfaceContainer = Color(0xFF1A0610),
-    surfaceContainerHigh = Color(0xFF2B0A1B),
-    surfaceContainerHighest = Color(0xFF47102C),
+    surfaceTint = Color(0xFFFF2A9D)
 )
 
-// Semantic Colors
+// Exported Semantic Colors for other components
 val colorPing = Color(0xFFFF007F)
 val colorPingRed = Color(0xFFFF0055)
 val colorConfigType = Color(0xFFFF2A9D)
@@ -106,7 +94,7 @@ val colorFabInactiveDark = Color(0xFF404040)
 val dividerColorLight = Color(0xFFFFD1DC)
 val dividerColorDark = Color(0xFF3D1426)
 
-// Toast Colors
+// Toast/SnackBar Colors
 val toastNormalBgLight = Color(0xCC201A1D)
 val toastNormalBgDark = Color(0xCC1A0610)
 val toastSuccessBg = Color(0xCCFF007F)
@@ -115,8 +103,10 @@ val toastInfoBg = Color(0xCCFF2A9D)
 val toastIconCircleBg = Color(0x40FFFFFF)
 val toastTextColor = Color.White
 
+val LocalDarkTheme = compositionLocalOf { true }
+
 object ThemeManager {
-    private val _themeMode = MutableStateFlow(2) // Default Dark OLED
+    private val _themeMode = MutableStateFlow(2)
     val themeMode: StateFlow<Int> = _themeMode.asStateFlow()
 
     fun setThemeMode(mode: Int) {
@@ -126,7 +116,7 @@ object ThemeManager {
         } catch (_: Exception) {}
     }
 
-    init {
+    fun refresh() {
         try {
             val saved = MmkvManager.decodeSettings("pref_theme", 2)
             if (saved is Int) {
@@ -134,24 +124,22 @@ object ThemeManager {
             }
         } catch (_: Exception) {}
     }
+
+    init {
+        refresh()
+    }
 }
 
-val LocalDarkTheme = compositionLocalOf { true }
-
 @Composable
-fun SamalTheme(
-    content: @Composable () -> Unit
-) {
+fun SamalTheme(content: @Composable () -> Unit) {
     val themeMode by ThemeManager.themeMode.collectAsState()
-    val systemDark = isSystemInDarkTheme()
     val darkTheme = when (themeMode) {
-        0 -> false // Light
-        1 -> true  // Dark
-        else -> true // OLED Black by default
+        0 -> false
+        1 -> true
+        else -> true
     }
 
     val colorScheme = if (darkTheme) DarkColor else LightColor
-
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
@@ -164,9 +152,12 @@ fun SamalTheme(
     }
 
     CompositionLocalProvider(LocalDarkTheme provides darkTheme) {
-        MaterialTheme(
-            colorScheme = colorScheme,
-            content = content
-        )
+        MaterialTheme(colorScheme = colorScheme, content = content)
     }
+}
+
+// Alias for compatibility with BaseComponentActivity
+@Composable
+fun AppTheme(content: @Composable () -> Unit) {
+    SamalTheme(content)
 }
