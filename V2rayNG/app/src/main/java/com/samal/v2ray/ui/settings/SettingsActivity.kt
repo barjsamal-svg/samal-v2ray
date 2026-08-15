@@ -244,7 +244,7 @@ fun SettingsScreen(
                     selectedValue = uiModeNight,
                     onSelected = {
                         uiModeNight = it
-                        ThemeManager.setThemeMode(it)
+                        ThemeManager.setThemeMode(it.toIntOrNull() ?: 2)
                     }
                 )
             }

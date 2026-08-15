@@ -118,10 +118,8 @@ object ThemeManager {
 
     fun refresh() {
         try {
-            val saved = MmkvManager.decodeSettings("pref_theme", 2)
-            if (saved is Int) {
-                _themeMode.value = saved
-            }
+            val saved = MmkvManager.decodeSettingsInt("pref_theme", 2)
+            _themeMode.value = saved
         } catch (_: Exception) {}
     }
 
