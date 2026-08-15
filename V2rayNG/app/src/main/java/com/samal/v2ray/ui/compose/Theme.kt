@@ -38,6 +38,7 @@ object ThemeManager {
     fun getTheme(): Int = 0
     fun setTheme(theme: Int) {}
     fun setThemeMode(mode: Int) {}
+    fun refresh() {}
 }
 
 val colorConfigType = Color(0xFFFF1493)
@@ -50,6 +51,8 @@ val toastNormalBgDark = Color(0xFF2A2E3D)
 val toastNormalBgLight = Color(0xFFFFFFFF)
 val toastSuccessBg = Color(0xFF10B981)
 val toastErrorBg = Color(0xFFEF4444)
+val toastInfoBg = Color(0xFF3B82F6)
+val toastTextColor = Color(0xFFFFFFFF)
 
 private val LuxuriousLightColor = lightColorScheme(
     primary = LuxuriousPink,
