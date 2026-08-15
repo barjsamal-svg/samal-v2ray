@@ -19,142 +19,110 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-// Ultra Modern Neo-Neon Pink & Pure OLED Black Theme
+// Pure White & Neon Pink Theme (White Edition)
+private val PureWhite = Color(0xFFFFFFFF)
+private val LightSurface = Color(0xFFF8F9FA)
+private val CardSurface = Color(0xFFFFFFFF)
+private val NeonPink = Color(0xFFFF007F)
+private val DeepPink = Color(0xFFFF1493)
+private val SoftPinkBg = Color(0xFFFFEFF5)
+private val TextDark = Color(0xFF1A1A1A)
+private val TextGray = Color(0xFF666666)
+
 private val LightColor = lightColorScheme(
-    primary = Color(0xFFFF007F), // Electric Neon Pink
-    onPrimary = Color(0xFFFFFFFF),
-    primaryContainer = Color(0xFFFFB6C1),
-    onPrimaryContainer = Color(0xFF380011),
-    secondary = Color(0xFFFF1493), // Deep Pink
-    onSecondary = Color(0xFFFFFFFF),
+    primary = NeonPink,
+    onPrimary = Color.WHITE,
+    primaryContainer = Color(0xFFFFD6E8),
+    onPrimaryContainer = Color(0xFF3B0018),
+    secondary = DeepPink,
+    onSecondary = Color.WHITE,
     secondaryContainer = Color(0xFFFFD1DC),
-    onSecondaryContainer = Color(0xFF3B0014),
-    tertiary = Color(0xFFC71585),
-    onTertiary = Color(0xFFFFFFFF),
-    tertiaryContainer = Color(0xFFFFE4E1),
-    onTertiaryContainer = Color(0xFF2C0B1B),
-    error = Color(0xFFD32F2F),
-    errorContainer = Color(0xFFFFCDD2),
-    onError = Color(0xFFFFFFFF),
-    onErrorContainer = Color(0xFFB71C1C),
-    background = Color(0xFFFFF0F5),
-    onBackground = Color(0xFF1F1A1C),
-    surface = Color(0xFFFFFFFF),
-    onSurface = Color(0xFF1F1A1C),
-    surfaceVariant = Color(0xFFF9E4EC),
-    onSurfaceVariant = Color(0xFF524348),
-    outline = Color(0xFF857378),
-    outlineVariant = Color(0xFFD7C1C8),
-    inverseSurface = Color(0xFF342F31),
-    inverseOnSurface = Color(0xFFFAEDF1),
-    inversePrimary = Color(0xFFFF85C0),
-    scrim = Color(0xFF000000),
-    surfaceTint = Color(0xFFFF007F)
+    onSecondaryContainer = Color(0xFF3D0017),
+    background = PureWhite,
+    onBackground = TextDark,
+    surface = CardSurface,
+    onSurface = TextDark,
+    surfaceVariant = SoftPinkBg,
+    onSurfaceVariant = TextGray,
+    outline = Color(0xFFE0E0E0),
+    surfaceTint = NeonPink
 )
 
-private val DarkColor = darkColorScheme(
-    primary = Color(0xFFFF2A9D), // Vibrant Glowing Pink
-    onPrimary = Color(0xFF20000A),
-    primaryContainer = Color(0xFF99004C),
-    onPrimaryContainer = Color(0xFFFFD9E4),
-    secondary = Color(0xFFFF66B2),
-    onSecondary = Color(0xFF2B0014),
-    secondaryContainer = Color(0xFF660033),
-    onSecondaryContainer = Color(0xFFFFD9E4),
-    tertiary = Color(0xFFFF80BF),
-    onTertiary = Color(0xFF33001A),
-    tertiaryContainer = Color(0xFF800040),
-    onTertiaryContainer = Color(0xFFFFD9E4),
-    error = Color(0xFFFFB4AB),
-    errorContainer = Color(0xFF93000A),
-    onError = Color(0xFF690005),
-    onErrorContainer = Color(0xFFFFDAD6),
-    background = Color(0xFF000000), // Pure OLED Black 100%
-    onBackground = Color(0xFFFFF0F5),
-    surface = Color(0xFF000000), // Pure OLED Black Surface
-    onSurface = Color(0xFFFFF0F5),
-    surfaceVariant = Color(0xFF2E1A23),
-    onSurfaceVariant = Color(0xFFD9C1CA),
-    outline = Color(0xFFA18C94),
-    outlineVariant = Color(0xFF3D2631),
-    inverseSurface = Color(0xFFFFEFF5),
-    inverseOnSurface = Color(0xFF1A1115),
-    inversePrimary = Color(0xFFFF007F),
-    scrim = Color(0xFF000000),
-    surfaceTint = Color(0xFFFF2A9D)
+// Also keep light theme as default for dark setting if forced white
+private val DarkColor = lightColorScheme(
+    primary = NeonPink,
+    onPrimary = Color.WHITE,
+    primaryContainer = Color(0xFFFFD6E8),
+    onPrimaryContainer = Color(0xFF3B0018),
+    secondary = DeepPink,
+    onSecondary = Color.WHITE,
+    secondaryContainer = Color(0xFFFFD1DC),
+    onSecondaryContainer = Color(0xFF3D0017),
+    background = PureWhite,
+    onBackground = TextDark,
+    surface = CardSurface,
+    onSurface = TextDark,
+    surfaceVariant = SoftPinkBg,
+    onSurfaceVariant = TextGray,
+    outline = Color(0xFFE0E0E0),
+    surfaceTint = NeonPink
 )
 
 // Exported Semantic Colors for other components
-val colorPing = Color(0xFFFF007F)
-val colorPingRed = Color(0xFFFF0055)
-val colorConfigType = Color(0xFFFF2A9D)
+val colorPing = Color(0xFF00C853)
+val colorPingRed = Color(0xFFFF3D00)
+val colorConfigType = Color(0xFFFF007F)
 val colorFabActive = Color(0xFFFF007F)
-val colorFabInactiveLight = Color(0xFFB0B0B0)
-val colorFabInactiveDark = Color(0xFF404040)
+val colorFabInactiveLight = Color(0xFFE0E0E0)
+val colorFabInactiveDark = Color(0xFFBDBDBD)
 val dividerColorLight = Color(0xFFFFD1DC)
-val dividerColorDark = Color(0xFF3D1426)
+val dividerColorDark = Color(0xFFFFD1DC)
 
 // Toast/SnackBar Colors
-val toastNormalBgLight = Color(0xCC201A1D)
-val toastNormalBgDark = Color(0xCC1A0610)
+val toastNormalBgLight = Color(0xCC1A1A1A)
+val toastNormalBgDark = Color(0xCC1A1A1A)
 val toastSuccessBg = Color(0xCCFF007F)
 val toastErrorBg = Color(0xCCD32F2F)
-val toastInfoBg = Color(0xCCFF2A9D)
-val toastIconCircleBg = Color(0x40FFFFFF)
+val toastInfoBg = Color(0xCCFF1493)
+val toastIconCircleBg = Color(0x20FFFFFF)
 val toastTextColor = Color.White
 
-val LocalDarkTheme = compositionLocalOf { true }
+val LocalDarkTheme = compositionLocalOf { false }
 
 object ThemeManager {
-    private val _themeMode = MutableStateFlow(2)
+    private val _themeMode = MutableStateFlow(0) // Force Light/White mode by default
     val themeMode: StateFlow<Int> = _themeMode.asStateFlow()
 
     fun setThemeMode(mode: Int) {
-        _themeMode.value = mode
-        try {
-            MmkvManager.encodeSettings("pref_theme", mode)
-        } catch (_: Exception) {}
+        _themeMode.value = 0 // Always white
     }
 
-    fun refresh() {
-        try {
-            val saved = MmkvManager.decodeSettingsInt("pref_theme", 2)
-            _themeMode.value = saved
-        } catch (_: Exception) {}
-    }
+    fun refresh() {}
 
     init {
-        refresh()
+        _themeMode.value = 0
     }
 }
 
 @Composable
 fun SamalTheme(content: @Composable () -> Unit) {
-    val themeMode by ThemeManager.themeMode.collectAsState()
-    val darkTheme = when (themeMode) {
-        0 -> false
-        1 -> true
-        else -> true
-    }
-
-    val colorScheme = if (darkTheme) DarkColor else LightColor
+    val colorScheme = LightColor
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
             WindowCompat.getInsetsController(window, view).apply {
-                isAppearanceLightStatusBars = !darkTheme
-                isAppearanceLightNavigationBars = !darkTheme
+                isAppearanceLightStatusBars = true
+                isAppearanceLightNavigationBars = true
             }
         }
     }
 
-    CompositionLocalProvider(LocalDarkTheme provides darkTheme) {
+    CompositionLocalProvider(LocalDarkTheme provides false) {
         MaterialTheme(colorScheme = colorScheme, content = content)
     }
 }
 
-// Alias for compatibility with BaseComponentActivity
 @Composable
 fun AppTheme(content: @Composable () -> Unit) {
     SamalTheme(content)

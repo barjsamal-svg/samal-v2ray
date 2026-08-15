@@ -30,22 +30,32 @@ class UrlSchemeActivity : BaseComponentActivity() {
                             parseUri(it, null)
                         }
                     }
-                } else if (action == Intent.ACTION_VIEW) {
-                    when (data?.host) {
-                        "install-config" -> {
-                            val uri: Uri? = intent.data
-                            val shareUrl = uri?.getQueryParameter("url").orEmpty()
-                            parseUri(shareUrl, uri?.fragment)
+                } else if (action == Intent.ACTION_VIEW || action == Intent.ACTION_SEND) {
+                    val uri: Uri? = if (action == Intent.ACTION_SEND) intent.getParcelableExtra(Intent.EXTRA_STREAM) else intent.data
+                    if (uri != null) {
+                        val content = readUriContent(uri)
+                        if (!content.isNullOrEmpty()) {
+                            lifecycleScope.launch(Dispatchers.IO) {
+                                val (count, countSub) = AngConfigManager.importBatchConfig(content, "", false)
+                                withContext(Dispatchers.Main) {
+                                    if (count + countSub > 0) {
+                                        toast("SAMAL Config Imported Successfully!")
+                                    } else {
+                                        toast("Failed to import SAMAL Config")
+                                    }
+                                }
+                            }
                         }
-
-                        "install-sub" -> {
-                            val uri: Uri? = intent.data
-                            val shareUrl = uri?.getQueryParameter("url").orEmpty()
-                            parseUri(shareUrl, uri?.fragment)
-                        }
-
-                        else -> {
-                            toastError(R.string.toast_failure)
+                    } else if (action == Intent.ACTION_VIEW) {
+                        when (data?.host) {
+                            "install-config" -> {
+                                val shareUrl = data?.getQueryParameter("url").orEmpty()
+                                parseUri(shareUrl, data?.fragment)
+                            }
+                            "install-sub" -> {
+                                val shareUrl = data?.getQueryParameter("url").orEmpty()
+                                parseUri(shareUrl, data?.fragment)
+                            }
                         }
                     }
                 }
@@ -88,3 +98,13 @@ class UrlSchemeActivity : BaseComponentActivity() {
         }
     }
 }
+    private fun readUriContent(uri: Uri): String? {
+        return try {
+            contentResolver.openInputStream(uri)?.use { inputStream ->
+                inputStream.bufferedReader().use { it.readText() }
+            }
+        } catch (e: Exception) {
+            LogUtil.e(AppConfig.TAG, "Failed to read URI content", e)
+            null
+        }
+    }

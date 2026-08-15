@@ -128,9 +128,44 @@ class MainActivity : HelperBaseComponentActivity() {
         AngConfigManager.share2Clipboard(this, guid) == 0
 
     private fun shareSamalToClipboard(guid: String) {
+        showSamalExportDialog(guid)
+    }
+
+    private fun showSamalExportDialog(guid: String) {
+        val dialogView = android.widget.LinearLayout(this).apply {
+            orientation = android.widget.LinearLayout.VERTICAL
+            setPadding(50, 40, 50, 10)
+        }
+
+        val messageInput = android.widget.EditText(this).apply {
+            hint = "HTML Message (@libSAMMAL / IQ NET)"
+            setText("<h6 align=\"center\"><span style=\"color:aqua;\">🇮🇶 𝑰𝑸 𝑵𝑬𝑻 🇮🇶<br>@libSAMMAL")
+            setSelection(text.length)
+        }
+
+        val expiryInput = android.widget.EditText(this).apply {
+            hint = "Expiry Date (YYYY-MM-DD)"
+            setText("2030-12-31")
+        }
+
+        dialogView.addView(messageInput)
+        dialogView.addView(expiryInput)
+
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("SAMAL Secure Export")
+            .setView(dialogView)
+            .setPositiveButton("Export & Share") { _, _ ->
+                val htmlMsg = messageInput.text.toString()
+                val expiry = expiryInput.text.toString()
+                performSamalExport(guid, htmlMsg, expiry)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun performSamalExport(guid: String, htmlMsg: String, expiry: String) {
         try {
-            val htmlMsg = "<h6 align=\"center\"><span style=\"text-align: center;\"><h4 style=\"text-align:center;\"> <b><span style=\"color:aqua;\">🇮🇶 𝑰𝑸 𝑵𝑬𝑻 🇮🇶<br><br>🌟محترفو الانترنت المجاني🌟"
-            val samalFile = AngConfigManager.share2Samal(this, guid, htmlMsg, "2029-12-31")
+            val samalFile = AngConfigManager.share2Samal(this, guid, htmlMsg, expiry)
             if (samalFile != null && samalFile.exists()) {
                 val authority = "${packageName}.cache"
                 val uri = androidx.core.content.FileProvider.getUriForFile(this, authority, samalFile)
@@ -143,6 +178,7 @@ class MainActivity : HelperBaseComponentActivity() {
                 val chooser = Intent.createChooser(intent, "Share SAMAL Config")
                 chooser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(chooser)
+                toastSuccess(R.string.toast_success)
             } else {
                 toast("Failed to create .samal file")
             }
