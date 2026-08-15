@@ -92,3 +92,7 @@ fun AppTheme(
         content = content
     )
 }
+
+val toastSuccess = Color(0xFF10B981)
+val colorPing = Color(0xFF10B981)
+val colorPingRed = Color(0xFFEF4444)

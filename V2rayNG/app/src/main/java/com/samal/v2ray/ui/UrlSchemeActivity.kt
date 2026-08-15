@@ -45,7 +45,7 @@ class UrlSchemeActivity : BaseComponentActivity() {
                                     val (count, countSub) = AngConfigManager.importBatchConfig(content.trim(), "", false)
                                     withContext(Dispatchers.Main) {
                                         if (count + countSub > 0) {
-                                            toastSuccess("✅ تم استيراد كونفج SAMAL بنجاح!")
+                                            toast("✅ تم استيراد كونفج SAMAL بنجاح!")
                                         } else {
                                             toastError("❌ فشل استيراد الكونفج!")
                                         }
