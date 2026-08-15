@@ -548,3 +548,7 @@
     <string name="samal_import_success">SAMAL Config Imported Successfully!</string>
     <string name="samal_import_expired">This SAMAL Config has expired!</string>
 </resources>
+    <string name="share_method_samal">Export .SAMAL File (@libsammal)</string>
+    <string name="share_method_qrcode">Share as QR Code</string>
+    <string name="share_method_clipboard">Share as Link</string>
+    <string name="share_method_full_content">Share Full Content</string>

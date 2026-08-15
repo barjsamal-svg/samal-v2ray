@@ -131,7 +131,7 @@ class MainActivity : HelperBaseComponentActivity() {
         val htmlMsg = "<h6 align=\\\"center\\\"><span style=\\\"text-align: center;\\\"><h4 style=\\\"text-align:center;\\\"> <b><span style=\\\"color:aqua;\\\">🇮🇶 𝑰𝑸 𝑵𝑬𝑻 🇮🇶\\n\\n🌟محترفو الانترنت المجاني🌟"
         val samalFile = AngConfigManager.share2Samal(this, guid, htmlMsg, "2029-12-31")
         if (samalFile != null && samalFile.exists()) {
-            val uri = androidx.core.content.FileProvider.getUriForFile(this, "${packageName}.fileprovider", samalFile)
+            val uri = androidx.core.content.FileProvider.getUriForFile(this, "${packageName}.cache", samalFile)
             val intent = Intent(Intent.ACTION_SEND).apply {
                 type = "*/*"
                 putExtra(Intent.EXTRA_STREAM, uri)
