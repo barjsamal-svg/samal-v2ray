@@ -193,7 +193,7 @@
 
         <activity
             android:name=".ui.UrlSchemeActivity"
-            exported="true">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
