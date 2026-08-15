@@ -46,6 +46,11 @@ val LocalDarkTheme = androidx.compose.runtime.compositionLocalOf { false }
 val dividerColorDark = Color(0xFF2A2E3D)
 val dividerColorLight = Color(0xFFE2E8F0)
 
+val toastNormalBgDark = Color(0xFF2A2E3D)
+val toastNormalBgLight = Color(0xFFFFFFFF)
+val toastSuccessBg = Color(0xFF10B981)
+val toastErrorBg = Color(0xFFEF4444)
+
 private val LuxuriousLightColor = lightColorScheme(
     primary = LuxuriousPink,
     onPrimary = PureWhite,
