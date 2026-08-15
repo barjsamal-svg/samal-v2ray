@@ -97,7 +97,7 @@ class UrlSchemeActivity : BaseComponentActivity() {
             }
         }
     }
-}
+
     private fun readUriContent(uri: Uri): String? {
         try {
             val inputStream = contentResolver.openInputStream(uri) ?: return null
