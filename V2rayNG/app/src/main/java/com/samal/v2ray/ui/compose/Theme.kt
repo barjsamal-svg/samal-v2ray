@@ -31,11 +31,11 @@ private val TextGray = Color(0xFF666666)
 
 private val LightColor = lightColorScheme(
     primary = NeonPink,
-    onPrimary = Color.WHITE,
+    onPrimary = PureWhite,
     primaryContainer = Color(0xFFFFD6E8),
     onPrimaryContainer = Color(0xFF3B0018),
     secondary = DeepPink,
-    onSecondary = Color.WHITE,
+    onSecondary = PureWhite,
     secondaryContainer = Color(0xFFFFD1DC),
     onSecondaryContainer = Color(0xFF3D0017),
     background = PureWhite,
@@ -51,11 +51,11 @@ private val LightColor = lightColorScheme(
 // Also keep light theme as default for dark setting if forced white
 private val DarkColor = lightColorScheme(
     primary = NeonPink,
-    onPrimary = Color.WHITE,
+    onPrimary = PureWhite,
     primaryContainer = Color(0xFFFFD6E8),
     onPrimaryContainer = Color(0xFF3B0018),
     secondary = DeepPink,
-    onSecondary = Color.WHITE,
+    onSecondary = PureWhite,
     secondaryContainer = Color(0xFFFFD1DC),
     onSecondaryContainer = Color(0xFF3D0017),
     background = PureWhite,
