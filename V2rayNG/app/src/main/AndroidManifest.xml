@@ -192,7 +192,7 @@
             android:theme="@style/AppThemeDayNight.NoActionBar.Translucent" />
 
         <activity
-            name=".ui.UrlSchemeActivity"
+            android:name=".ui.UrlSchemeActivity"
             exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
