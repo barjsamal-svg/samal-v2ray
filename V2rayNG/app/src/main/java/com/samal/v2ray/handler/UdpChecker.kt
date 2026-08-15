@@ -30,9 +30,9 @@ object UdpChecker {
                         soTimeout = 3000
                     }
                     val payload = if (port == 19302) {
-                        byteArrayOf(0x00, 0x01, 0x00, 0x00, 0x21, 0x12, 0xa4, 0x42) + ByteArray(12) { 0.toByte() }
+                        byteArrayOf(0x00, 0x01, 0x00, 0x00, 0x21, 0x12, 0xa4, 0x42, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)
                     } else {
-                        ByteArray(48).apply { this[0] = 0x1b }
+                        ByteArray(48).apply { this[0] = 0x1b.toByte() }
                     }
 
                     val packet = DatagramPacket(payload, payload.size, addr, port)

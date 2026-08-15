@@ -42,6 +42,10 @@ object ThemeManager {
 
 val colorConfigType = Color(0xFFFF1493)
 
+val LocalDarkTheme = androidx.compose.runtime.compositionLocalOf { false }
+val dividerColorDark = Color(0xFF2A2E3D)
+val dividerColorLight = Color(0xFFE2E8F0)
+
 private val LuxuriousLightColor = lightColorScheme(
     primary = LuxuriousPink,
     onPrimary = PureWhite,
