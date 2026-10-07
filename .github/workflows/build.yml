@@ -40,13 +40,13 @@ jobs:
         ./gradlew assembleRelease --stacktrace
 
     - name: Upload arm64-v8a APK
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: samal-v2ray-arm64
         path: V2rayNG/app/build/outputs/apk/*/release/*arm64-v8a*.apk
 
     - name: Upload universal APK
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: samal-v2ray-universal
         path: V2rayNG/app/build/outputs/apk/*/release/*universal*.apk
